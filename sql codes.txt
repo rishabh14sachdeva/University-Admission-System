@@ -1,0 +1,105 @@
+create sequence seq
+increment by 1
+start with 640001
+minvalue 640001
+nomaxvalue
+nocycle;
+
+create table merit(
+ano number(10) references appno(ano),
+cname varchar(100),
+category varchar(10),
+dlevel varchar(6),
+gpa number(5,2),
+p1 varchar(40),
+p2 varchar(40),
+p3 varchar(40),
+ca varchar(100),
+conno varchar(12));
+
+create table fee(
+ano number(10) references appno(ano),
+status varchar(12));
+
+
+createtable log(
+username varchar(30),
+passwd varchar(30),
+loginid varchar(30),
+mob varchar(12));
+
+
+
+create table appno(
+ano number(10) primary key);
+
+create table mdet(
+ano number(10) references appno(ano),
+dlevel varchar(6),
+p1 varchar(40),
+p2 varchar(40),
+p3 varchar(40));
+
+create table cdet(
+ano number(10) references appno(ano),
+cname varchar(40),
+cdob varchar(10),
+cgender varchar(10),
+ccat varchar(10),
+cmob varchar(12),
+cemail varchar(100));
+
+create table cadd(
+ano number(10) references appno(ano),
+caddress varchar(100),
+ccity varchar(40),
+cstate varchar(50),
+cpin varchar(10));
+
+create table sdet(
+ano number(10) references appno(ano),
+sname varchar(40),
+sboard varchar(30),
+scity varchar(40),
+saddress varchar(60),
+syop varchar(4),
+phy number(3),
+chem number(3),
+maths number(3),
+avg number(5,2),
+jee number(3),
+gpa number(5,2));
+
+create table codet(
+ano number(10) references appno(ano),
+coname varchar(40),
+couniv varchar(30),
+cocity varchar(40),
+coaddress  varchar(60),
+coyop varchar(4),
+per number(5,2),
+gate number(3),
+gpa number(5,2));
+
+
+create table pdet(
+ano number(10) references appno(ano),
+fname varchar(40),
+fmob varchar(12),
+mname varchar(40),
+mmob varchar(12));
+
+create view master as
+select appno.ano,dlevel,p1,p2,p3,cname,cdob,cgender,ccat,cmob,cemail,caddress,ccity,cstate,cpin,sname,sboard,scity,saddress,syop,phy,chem,maths,jee,coname,couniv,cocity,coaddress,coyop,per,gate,fname,fmob,mname,mmob
+from appno,mdet,cdet,cadd,sdet,codet,pdet
+where appno.ano=mdet.ano and appno.ano=cdet.ano and appno.ano=cadd.ano and appno.ano=sdet.ano and appno.ano=codet.ano and appno.ano=pdet.ano;
+
+create view bav as
+select mdet.ano,ccat,gpa
+from mdet,cdet,sdet
+where mdet.ano=cdet.ano and mdet.ano=sdet.ano and mdet.dlevel='B.Tech';
+
+create view mav as
+select mdet.ano,ccat,gpa
+from mdet,cdet,codet
+where mdet.ano=cdet.ano and mdet.ano=codet.ano and mdet.dlevel='M.Tech';
